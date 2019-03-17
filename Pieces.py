@@ -6,100 +6,97 @@ def onBoard(row, col):
 
 	return True
 
+def possiblePawnStarts(end_coords, color, board):
+	if color == 'W':
+		# Cant move pawns to 1st or 2nd rank
+		if end_coords[0] == 0 or end_coords[0] == 1:
+			return []
 
-class ChessPiece:
-	"""Superclass for individual chess pieces"""
-	def __init__(self, row, col, white=True):
-		self.white = white
+		start_row, start_col = end_coords[0]-1, end_coords[1]
+		if board[start_row][start_col] == 'WP':
+			return [(start_row, start_col)]
+		# Pawns can move 2 from the 2nd rank only if they are not blocked
+		elif end_coords[0] == 3:
+			start_row, start_col = 1, end_coords[1]
+			if board[start_row][start_col] == 'WP':
+				return [(start_row, start_col)]
 
-		if not onBoard(row, col):
-			raise ValueError("Piece {} cannot be placed on {}".format(self.piece, (row, col)))
-		self.row = row
-		self.col = col
+	elif color == 'B':
+		# Cant move pawns to 7th or 8th rank
+		if end_coords[0] == 7 or end_coords[0] == 6:
+			return []
 
-		self.has_moved = False
+		start_row, start_col = end_coords[0]+1, end_coords[1]
+		if board[start_row][start_col] == 'BP':
+			return [(start_row, start_col)]
+		# Pawns can move 2 from the 7th rank only if they are not blocked
+		elif end_coords[0] == 4:
+			start_row, start_col = 6, end_coords[1]
+			if board[start_row][start_col] == 'BP':
+				return [(start_row, start_col)]
 
-	def __repr__(self):
-		if self.white:
-			return 'W' + self.piece
-		else:
-			return 'B' + self.piece
+	return []
 
-class Pawn(ChessPiece):
-	def __init__(self, row, col, white=True):
-		self.piece = 'P'
-		super().__init__(row, col, white)
+def possibleKinghtStarts(end_coords, color, board):
+	diffs = [(1,2), (1,-2), (2,1), (2,-1), (-1,2), (-1,-2), (-2,1), (-2,-1)]
+	possible_start_coords = []
 
-	def moves(self):
-		possible_moves = []
-		if self.white:
-			possible_moves.append((self.row+1, self.col))
-			if self.row == 1:
-				possible_moves.append((self.row+2, self.col))
-		else:
-			possible_moves.append((self.row-1, self.col))
-			if self.row == 6:
-				possible_moves.append((self.row-2, self.col))
-		
-		return possible_moves
+	for diff in diffs:
+		start_row, start_col = end_coords[0]+diff[0], end_coords[1]+diff[1]
+		if not onBoard(start_row, start_col):
+			continue
 
-class Knight(ChessPiece):
-	def __init__(self, row, col, white=True):
-		self.piece = 'N'
-		super().__init__(row, col, white)
+		if board[start_row][start_col] == color+'N':
+			possible_start_coords.append((start_row, start_col))
 
-	def moves(self):
-		diffs = [(1,2), (1,-2), (2,1), (2,-1), (-1,2), (-1,-2), (-2,1), (-2,-1)]
-		possible_moves = []
+	return possible_start_coords
 
-		for diff in diffs:
-			end_row, end_col = self.row+diff[0], self.col+diff[1]
-			if not onBoard(end_row, end_col):
-				continue
-			possible_moves.append((end_row, end_col))
+def possibleBishopStarts(end_coords, color, board):
+	return []
 
-		return possible_moves
+def possibleRookStarts(end_coords, color, board):
+	return []
 
-class Bishop(ChessPiece):
-	def __init__(self, row, col, white=True):
-		self.piece = 'B'
-		super().__init__(row, col, white)
+def possibleQueenStarts(end_coords, color, board):
+	return []
 
-	# TODO: Bishop moves
-	def moves(self):
-		return []
+def possibleKingStarts(end_coords, color, board):
+	diffs = [(1,1), (1,0), (1,-1), (0,1), (0,-1), (-1,1), (-1,0), (-1,-1)]
+	possible_start_coords = []
 
-class Rook(ChessPiece):
-	def __init__(self, row, col, white=True):
-		self.piece = 'R'
-		super().__init__(row, col, white)
+	for diff in diffs:
+		start_row, start_col = end_coords[0]+diff[0], end_coords[1]+diff[1]
+		if not onBoard(start_row, start_col):
+			continue
 
-	# TODO: Rook moves
-	def moves(self):
-		return []
+		if board[start_row][start_col] == color+'K':
+			possible_start_coords.append((start_row, start_col))
 
-class Queen(ChessPiece):
-	def __init__(self, row, col, white=True):
-		self.piece = 'Q'
-		super().__init__(row, col, white)
+	return possible_start_coords
 
-	# TODO: Queen moves
-	def moves(self):
-		return []
+def possiblePieceStarts(piece, end_coords, color, board):
+	"""Gets the possible starting positions of pieces that can move to end_coords.
 
-class King(ChessPiece):
-	def __init__(self, row, col, white=True):
-		self.piece = 'K'
-		super().__init__(row, col, white)
+	Params:
+	piece -- Piece making move from ['','N','B','R','Q','K']
+	end_coords -- coords in board of the end of the desired move
+	color -- color of moving piece from ['W','B']
+	board -- current board position
 
-	def moves(self):
-		diffs = [(1,1), (1,0), (1,-1), (0,1), (0,-1), (-1,1), (-1,0), (-1,-1)]
-		possible_moves = []
+	Returns: list of possible starting coords
+	"""
 
-		for diff in diffs:
-			end_row, end_col = self.row+diff[0], self.col+diff[1]
-			if not onBoard(end_row, end_col):
-				continue
-			possible_moves.append((end_row, end_col))
-
-		return possible_moves
+	if piece == 'P':
+		return possiblePawnStarts(end_coords, color, board)
+	elif piece == 'N':
+		return possibleKinghtStarts(end_coords, color, board)
+	elif piece == 'B':
+		return possibleBishopStarts(end_coords, color, board)
+	elif piece == 'R':
+		return possibleRookStarts(end_coords, color, board)
+	elif piece == 'Q':
+		return possibleQueenStarts(end_coords, color, board)
+	elif piece == 'K':
+		return possibleKingStarts(end_coords, color, board)
+	else:
+		raise ValueError("Invalid piece '{}' given".format(piece))
