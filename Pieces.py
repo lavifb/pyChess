@@ -1,3 +1,5 @@
+from consts import EMPTY_SQUARE
+
 def onBoard(row, col):
 	if row > 7 or row < 0:
 		return False
@@ -7,6 +9,7 @@ def onBoard(row, col):
 	return True
 
 def possiblePawnStarts(end_coords, color, board):
+	# TODO: pawn capture
 	if color == 'W':
 		# Cant move pawns to 1st or 2nd rank
 		if end_coords[0] == 0 or end_coords[0] == 1:
@@ -52,7 +55,17 @@ def possibleKinghtStarts(end_coords, color, board):
 	return possible_start_coords
 
 def possibleBishopStarts(end_coords, color, board):
-	return []
+	diffs = [(1,1), (1,-1), (-1,1), (-1,-1)]
+	possible_start_coords = []
+
+	for diff in diffs:
+		start_row, start_col = end_coords[0]+diff[0], end_coords[1]+diff[1]
+		while onBoard(start_row, start_col) and board[start_row][start_col] == EMPTY_SQUARE:
+			start_row, start_col = start_row+diff[0], start_col+diff[1]
+		if onBoard(start_row, start_col) and board[start_row][start_col] == color+'B':
+			possible_start_coords.append((start_row, start_col))
+
+	return possible_start_coords
 
 def possibleRookStarts(end_coords, color, board):
 	return []

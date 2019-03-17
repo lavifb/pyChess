@@ -1,20 +1,8 @@
 import re
 import copy
 
+from consts import *
 from Pieces import possiblePieceStarts
-
-# glyphs for pretty chess piece output
-chess_glyphs = {
-	'WK': '♔ ', 'WQ': '♕ ', 'WR': '♖ ', 'WB': '♗ ', 'WN': '♘ ', 'WP': '♙ ',
-	'BK': '♚ ', 'BQ': '♛ ', 'BR': '♜ ', 'BB': '♝ ', 'BN': '♞ ', 'BP': '♟ ',
-	'  ': '  '
-}
-
-# conversion between chess notation and col index
-col_conv = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
-
-EMPTY_SQUARE = '  '
-ES = EMPTY_SQUARE
 
 class Chess:
 	def __init__(self, glyhs=True):
@@ -26,7 +14,7 @@ class Chess:
 		self.width  = 8
 		self.height = 8
 		self.glyhs = glyhs
-		self.board = [['  ']*self.width for i in range(self.height)]
+		self.board = [[EMPTY_SQUARE]*self.width for i in range(self.height)]
 		self.turn = 0 # White goes first
 
 		# TODO: pawn promotion in regex
@@ -128,12 +116,15 @@ class Chess:
 				raise ValueError("No piece found that can make move from {}{} to {}".format(piece, start_pos, end_pos))
 
 
+		# TODO: Castling
+
 		# move piece
 		newBoard = copy.deepcopy(self.board)
 		newBoard[start_coords[0]][start_coords[1]] = EMPTY_SQUARE
 		newBoard[end_coords[0]][end_coords[1]] = color + piece
 
-		# TODO: Castling
+		# TODO: check for check/checkmate
+
 		self.board = newBoard
 
 	def printBoard(self):
