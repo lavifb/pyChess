@@ -2,15 +2,14 @@ import re
 
 from Pieces import *
 
-BOARD_WIDTH  = 8
-BOARD_HEIGHT = 8
-
+# glyphs for pretty chess piece output
 chess_glyphs = {
 	'WK': '♔ ', 'WQ': '♕ ', 'WR': '♖ ', 'WB': '♗ ', 'WN': '♘ ', 'WP': '♙ ',
 	'BK': '♚ ', 'BQ': '♛ ', 'BR': '♜ ', 'BB': '♝ ', 'BN': '♞ ', 'BP': '♟ ',
 	'  ': '  '
 }
 
+# conversion between chess notation and col index
 col_conv = {'a':0, 'b':1, 'c':2, 'd':3, 'e':4, 'f':5, 'g':6, 'h':7}
 
 class Chess:
@@ -20,13 +19,13 @@ class Chess:
 		Params:
 		glyphs -- Use Unicode chess chars (default True)
 		"""
-		self.width  = BOARD_WIDTH
-		self.height = BOARD_HEIGHT
+		self.width  = 8
+		self.height = 8
 		self.glyhs = glyhs
 		self.pieces = ()
 		self.turn = 0 # White goes first
 
-		# TODO: pawn promotion
+		# TODO: pawn promotion in regex
 		self.move_re = re.compile(r'^([KQBNR]?)([abcdefgh][1-8])\s*(-\s*([abcdefgh][1-8]))?$')
 
 	def setupBoard(self):
@@ -154,14 +153,9 @@ class Chess:
 		print('    a  b  c  d  e  f  g  h ')
 		print('')
 
+
 chess = Chess()
 chess.setupBoard()
-# chess.printBoard()
-# chess.movePiece('N', (2,5), (0,6))
-# chess.movePiece('N', (2,5))
-# chess.printBoard()
-
-
 
 def gameLoop(chess):
 	while True:
