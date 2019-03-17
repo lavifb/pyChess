@@ -9,34 +9,61 @@ def onBoard(row, col):
 	return True
 
 def possiblePawnStarts(end_coords, color, board):
-	# TODO: pawn capture
 	if color == 'W':
 		# Cant move pawns to 1st or 2nd rank
 		if end_coords[0] == 0 or end_coords[0] == 1:
 			return []
 
-		start_row, start_col = end_coords[0]-1, end_coords[1]
-		if board[start_row][start_col] == 'WP':
-			return [(start_row, start_col)]
-		# Pawns can move 2 from the 2nd rank only if they are not blocked
-		elif end_coords[0] == 3:
-			start_row, start_col = 1, end_coords[1]
+		# Pawn is capturing
+		if board[end_coords[0]][end_coords[1]] != EMPTY_SQUARE:
+			possible_start_coords = []
+			start_row, start_col = end_coords[0]-1, end_coords[1]-1
+			if onBoard(start_row,start_col) and board[start_row][start_col] == 'WP':
+				possible_start_coords.append((start_row, start_col))
+			start_row, start_col = end_coords[0]-1, end_coords[1]+1
+			if onBoard(start_row,start_col) and board[start_row][start_col] == 'WP':
+				possible_start_coords.append((start_row, start_col))
+
+			return possible_start_coords
+
+		# Pawn is not capturing
+		else:
+			start_row, start_col = end_coords[0]-1, end_coords[1]
 			if board[start_row][start_col] == 'WP':
 				return [(start_row, start_col)]
+			# Pawns can move 2 from the 2nd rank only if they are not blocked
+			elif end_coords[0] == 3:
+				start_row, start_col = 1, end_coords[1]
+				if board[start_row][start_col] == 'WP':
+					return [(start_row, start_col)]
 
 	elif color == 'B':
 		# Cant move pawns to 7th or 8th rank
 		if end_coords[0] == 7 or end_coords[0] == 6:
 			return []
 
-		start_row, start_col = end_coords[0]+1, end_coords[1]
-		if board[start_row][start_col] == 'BP':
-			return [(start_row, start_col)]
-		# Pawns can move 2 from the 7th rank only if they are not blocked
-		elif end_coords[0] == 4:
-			start_row, start_col = 6, end_coords[1]
+		# Pawn is capturing
+		if board[end_coords[0]][end_coords[1]] != EMPTY_SQUARE:
+			possible_start_coords = []
+			start_row, start_col = end_coords[0]+1, end_coords[1]-1
+			if onBoard(start_row,start_col) and board[start_row][start_col] == 'BP':
+				possible_start_coords.append((start_row, start_col))
+			start_row, start_col = end_coords[0]+1, end_coords[1]+1
+			if onBoard(start_row,start_col) and board[start_row][start_col] == 'BP':
+				possible_start_coords.append((start_row, start_col))
+
+			return possible_start_coords
+
+		# Pawn is not capturing
+		else:
+			start_row, start_col = end_coords[0]+1, end_coords[1]
 			if board[start_row][start_col] == 'BP':
 				return [(start_row, start_col)]
+			# Pawns can move 2 from the 7th rank only if they are not blocked
+			elif end_coords[0] == 4:
+				start_row, start_col = 6, end_coords[1]
+				if board[start_row][start_col] == 'BP':
+					return [(start_row, start_col)]
 
 	return []
 

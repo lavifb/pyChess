@@ -145,6 +145,12 @@ chess = Chess()
 chess.setupBoard()
 
 def gameLoop(chess):
+	print("Welcome to Chess!")
+	print("Input 'q' to exit game")
+	print("Unambiguous moves are accepted in algebraic chess notation\n\tEx: Nf3, e4, Rxa7")
+	print("Moves are also accepted in long algebraic chess notation\n\tEx: Ng1-f3, e2-e4, Ra4xa7")
+	print("\n")
+
 	while True:
 		chess.printBoard()
 		try:
