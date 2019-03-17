@@ -30,10 +30,18 @@ class Pawn(ChessPiece):
 		self.piece = 'P'
 		super().__init__(row, col, white)
 
-	# TODO: Pawn moves
 	def moves(self):
-		possible_moves = [(self.row)]
-		return []
+		possible_moves = []
+		if self.white:
+			possible_moves.append((self.row+1, self.col))
+			if self.row == 1:
+				possible_moves.append((self.row+2, self.col))
+		else:
+			possible_moves.append((self.row-1, self.col))
+			if self.row == 6:
+				possible_moves.append((self.row-2, self.col))
+		
+		return possible_moves
 
 class Knight(ChessPiece):
 	def __init__(self, row, col, white=True):

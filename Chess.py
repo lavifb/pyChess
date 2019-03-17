@@ -64,6 +64,10 @@ class Chess:
 				end_pos = start_pos
 				start_pos = None
 
+			# set pawn for empty piece
+			if piece == '':
+				piece = 'P'
+
 			self.movePiece(piece, end_pos, start_pos)
 			self.turn = 1-self.turn
 
@@ -117,7 +121,7 @@ class Chess:
 				if (p.row, p.col) == start_coords:
 					piece_to_move = p
 
-			print(piece_to_move)
+			print(piece_to_move, piece_to_move.row, piece_to_move.col, piece_to_move.moves())
 			if piece_to_move == None or piece_to_move.piece != piece:
 				raise ValueError("No piece {} found at position {}".format(piece, end_pos))
 
