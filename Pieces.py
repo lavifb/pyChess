@@ -10,6 +10,7 @@ class ChessPiece:
 
 		self.row = r
 		self.col = c
+		self.has_moved = False
 
 	def __repr__(self):
 		if self.white:
