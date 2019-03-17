@@ -1,7 +1,7 @@
 import re
 import copy
 
-from Pieces import *
+from Pieces import possiblePieceStarts
 
 # glyphs for pretty chess piece output
 chess_glyphs = {
@@ -30,7 +30,7 @@ class Chess:
 		self.turn = 0 # White goes first
 
 		# TODO: pawn promotion in regex
-		self.move_re = re.compile(r'^([KQBNR]?)([abcdefgh][1-8])\s*(-\s*([abcdefgh][1-8]))?$')
+		self.move_re = re.compile(r'^([KQBNR])?(?:([abcdefgh][1-8])?(:?[abcdefgh])?\s*([-x]))?\s*([abcdefgh][1-8])$')
 
 	def setupBoard(self):
 		"""Setup Chess Board to start game"""
@@ -60,17 +60,23 @@ class Chess:
 		# TODO: check for castling
 		match = self.move_re.match(move)
 		if match:
-			piece, start_pos, end_pos = match.group(1, 2, 4)
+			piece, start_pos, move_type, end_pos = match.group(1, 2, 4, 5)
 			# If only end position is given
-			if end_pos == None:
-				end_pos = start_pos
-				start_pos = None
+			# if end_pos == None:
+			# 	end_pos = start_pos
+			# 	start_pos = None
 
 			# set pawn for empty piece
-			if piece == '':
+			if piece == None:
 				piece = 'P'
 
-			self.movePiece(piece, end_pos, start_pos)
+			# check for capture
+			capture = False
+			if move_type == 'x':
+				capture = True
+				# TODO: pawn capture notation (use group 3)
+
+			self.movePiece(piece, end_pos, start_pos, capture)
 			self.turn = 1-self.turn
 		else:
 			print("'{}' is an invalid move".format(move))
@@ -95,31 +101,38 @@ class Chess:
 		return (row, col)
 
 
-	def movePiece(self, piece, end_pos, start_pos=None):
+	def movePiece(self, piece, end_pos, start_pos=None, capture=False):
 		end_coords = self.convertPosToCoords(end_pos)
 		color = 'W' if self.turn == 0 else 'B'
 
-		# TODO: Check for capture
 		# check if end_pos is occupied
-		if self.board[end_coords[0]][end_coords[1]] != EMPTY_SQUARE:
-			raise ValueError("Cannot make move {}{} because the {} is occupied".format(piece, end_pos, end_pos))
+		if self.board[end_coords[0]][end_coords[1]][0][0] == color:
+			raise ValueError("Cannot make move {}{} because {} is occupied by your own piece".format(piece, end_pos, end_pos))
+		if not capture and self.board[end_coords[0]][end_coords[1]] != EMPTY_SQUARE:
+			raise ValueError("Cannot make move {}{} because {} is occupied".format(piece, end_pos, end_pos))
+		if capture and self.board[end_coords[0]][end_coords[1]] == EMPTY_SQUARE:
+			raise ValueError("Cannot make capture {}x{} because {} is unoccupied".format(piece, end_pos, end_pos))
 
-		# if piece == 'N':
 		possible_pieces_to_move = possiblePieceStarts(piece, end_coords, color, self.board)
-		print(possible_pieces_to_move)
+		# print(possible_pieces_to_move)
 
-		if len(possible_pieces_to_move) > 1 and start_pos == None:
-			raise ValueError("Multiple pieces found that can make move {}{}".format(piece, end_pos))
-		elif len(possible_pieces_to_move) < 1:
+		if len(possible_pieces_to_move) < 1:
 			raise ValueError("No piece found that can make move {}{}".format(piece, end_pos))
+		elif len(possible_pieces_to_move) > 1 and start_pos == None:
+			raise ValueError("Multiple pieces found that can make move {}{}".format(piece, end_pos))
+
+		start_coords = possible_pieces_to_move[0]
+		if start_pos:
+			start_coords = self.convertPosToCoords(start_pos)
+			if start_coords not in possible_pieces_to_move:
+				raise ValueError("No piece found that can make move from {}{} to {}".format(piece, start_pos, end_pos))
+
 
 		# move piece
-		start_coords = possible_pieces_to_move[0]
 		newBoard = copy.deepcopy(self.board)
 		newBoard[start_coords[0]][start_coords[1]] = EMPTY_SQUARE
 		newBoard[end_coords[0]][end_coords[1]] = color + piece
 
-		# TODO: Moving Pawns
 		# TODO: Castling
 		self.board = newBoard
 
