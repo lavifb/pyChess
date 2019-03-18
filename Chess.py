@@ -5,7 +5,7 @@ from consts import *
 from Pieces import possiblePieceStarts
 
 class Chess:
-	def __init__(self, glyhs=True):
+	def __init__(self, glyphs=True):
 		"""Initialize Chess Game
 
 		Params:
@@ -13,7 +13,7 @@ class Chess:
 		"""
 		self.width  = 8
 		self.height = 8
-		self.glyhs = glyhs
+		self.glyphs = glyphs
 		self.board = [[EMPTY_SQUARE]*self.width for i in range(self.height)]
 		self.turn = 0 # White goes first
 		self.moves = [[],[]] # records moves made so far
@@ -250,7 +250,7 @@ class Chess:
 		sep_line = '   ╟──┼──┼──┼──┼──┼──┼──┼──╢'
 		print('   ╔══╤══╤══╤══╤══╤══╤══╤══╗')
 		for i, row in enumerate(self.board[::-1]):
-			print('  {}║{}║'.format(8-i, '│'.join(map(lambda p: chess_glyphs[p], row))))
+			print('  {}║{}║'.format(8-i, '│'.join(map(lambda p: chess_glyphs[p] if self.glyphs else p, row))))
 			if i < 7:
 				print(sep_line)
 

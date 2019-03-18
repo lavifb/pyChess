@@ -30,6 +30,8 @@ The game accepts moves in long algebraic chess notation and standard algebraic c
 
 Examples of valid possible moves are `Nf3`, `e4`, `e2-e4`, `Qxd7`, `exd5`
 
+The board is shown using Unicode Chess glyphs. If they render weird, try using a different font or rendering without glyphs using the `g` input.
+
 ### Features
 - [x] Basic moving of pieces
 - [x] Printing board state

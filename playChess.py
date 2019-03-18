@@ -10,6 +10,7 @@ class ChessGame:
 		print("Welcome to Chess!")
 		print("Input 'q' to exit game")
 		print("Input 'm' to see moves made so far")
+		print("Input 'g' to toggle glyph for chess pieces")
 		print("Unambiguous moves are accepted in algebraic chess notation\n\tEx: Nf3, e4, Rxa7")
 		print("Moves are also accepted in long algebraic chess notation\n\tEx: Ng1-f3, e2-e4, Ra4xa7")
 		print("\n")
@@ -33,6 +34,9 @@ class ChessGame:
 					return
 				elif moveInput == 'm':
 					self.chess.printMoves()
+					continue
+				elif moveInput == 'g':
+					self.chess.glyphs = not self.chess.glyphs
 					continue
 				self.chess.makeMove(moveInput.strip())
 
