@@ -18,6 +18,7 @@ Examples of valid possible moves are `Nf3`, `e4`, `e2-e4`, `Qxd7`, `exd5`
 - [x] Algebraic move Input
     - [x] Long algebraic input
     - [ ] Disambiguated algebraic input
+    - [ ] Pawn promotion
 - [x] Capturing
 - [x] Pawns
     - [x] Pawn Capturing
