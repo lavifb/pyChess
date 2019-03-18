@@ -11,7 +11,7 @@ class ChessGame:
 		print("Input 'q' to exit game")
 		print("Input 'm' to see moves made so far")
 		print("Input 'g' to toggle glyph for chess pieces")
-		print("Unambiguous moves are accepted in algebraic chess notation\n\tEx: Nf3, e4, Rxa7")
+		print("Unambiguous moves are accepted in algebraic chess notation\n\tEx: Nf3, e4, Rxa7, f8=Q")
 		print("Moves are also accepted in long algebraic chess notation\n\tEx: Ng1-f3, e2-e4, Ra4xa7")
 		print("\n")
 

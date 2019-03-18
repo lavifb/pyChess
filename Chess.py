@@ -24,7 +24,7 @@ class Chess:
 		self.castle = [[True, True], [True, True]]
 
 		# TODO: pawn promotion in regex
-		self.move_re = re.compile(r'^([KQBNR])?(?:([abcdefgh][1-8])?(:?[abcdefgh])?\s*([-x]))?\s*([abcdefgh][1-8])$')
+		self.move_re = re.compile(r'^([KQBNR])?(?:([abcdefgh][1-8])?(:?[abcdefgh])?\s*([-x]))?\s*([abcdefgh][1-8])(?:=([QBNR]))?$')
 
 	def setupBoard(self):
 		"""Setup Chess Board to start game"""
@@ -58,7 +58,7 @@ class Chess:
 		else:
 			match = self.move_re.match(move)
 			if match:
-				piece, start_pos, pawn_pos, move_type, end_pos = match.group(1, 2, 3, 4, 5)
+				piece, start_pos, pawn_pos, move_type, end_pos, promotion = match.group(1, 2, 3, 4, 5, 6)
 
 				# set pawn for empty piece
 				if piece == None:
@@ -76,7 +76,7 @@ class Chess:
 							# mark that rank is not given
 							start_pos = 'X'+pawn_pos
 
-				self.movePiece(piece, end_pos, start_pos, capture)
+				self.movePiece(piece, end_pos, start_pos, capture, promotion)
 			else:
 				raise ValueError("'{}' is an invalid move".format(move))
 		
@@ -143,7 +143,7 @@ class Chess:
 		coords = self.convertPosToCoords(pos)
 		self.board[coords[0]][coords[1]] = piece
 
-	def movePiece(self, piece, end_pos, start_pos=None, capture=False):
+	def movePiece(self, piece, end_pos, start_pos=None, capture=False, promotion=None):
 		end_coords = self.convertPosToCoords(end_pos)
 		color = 'W' if self.turn == 0 else 'B'
 
@@ -181,6 +181,17 @@ class Chess:
 				start_coords = self.convertPosToCoords(start_pos)
 				if start_coords not in possible_pieces_to_move:
 					raise ValueError("No piece found that can make move from {}{} to {}".format(piece, start_pos, end_pos))
+			
+		# Pawn promotion
+		if piece == 'P' and (self.turn == 0 and end_coords[0] == 7) or (self.turn == 1 and end_coords[0] == 0):
+			if promotion:
+				piece = promotion
+			else:
+				raise ValueError("Cannot move to {} without promotion".format(piece, end_pos))
+		else:
+			if promotion:
+				raise ValueError("Cannot promote with this move")
+
 
 
 		# move piece

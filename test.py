@@ -440,6 +440,46 @@ class Castling(unittest.TestCase):
 		with self.assertRaises(ValueError):
 			self.chess.makeMove('0-0-0')
 
+class PawnPromotion(unittest.TestCase):
+	def setUp(self):
+		self.chess = Chess()
+		self.chess.setSquare('e7', 'WP')
+		self.chess.setSquare('e2', 'BP')
+		self.chess.setSquare('f1', 'WN')
+
+	def test_promotion(self):
+		"""
+		Pawn promotion
+		"""
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('e8')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('exf8')
+		self.chess.makeMove('e8=N')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('exf1')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('exf1=K')
+		self.chess.makeMove('exf1=Q')
+
+		self.assertEqual(self.chess.checkSquare('e7'), EMPTY_SQUARE)
+		self.assertEqual(self.chess.checkSquare('e8'), 'WN')
+		self.assertEqual(self.chess.checkSquare('e2'), EMPTY_SQUARE)
+		self.assertEqual(self.chess.checkSquare('e1'), EMPTY_SQUARE)
+		self.assertEqual(self.chess.checkSquare('f1'), 'BQ')
+
+	def test_not_promotion(self):
+		"""
+		Not promotios
+		"""
+		self.chess.setSquare('e8', 'BB')
+		self.chess.setSquare('a2', 'WP')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Ne3=R')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('e8=B')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('a4=Q')
 
 
 if __name__ == '__main__':

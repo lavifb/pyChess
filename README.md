@@ -28,7 +28,7 @@ Input `q` to quit and `m` to see the moves so far.
 
 The game accepts moves in long algebraic chess notation and standard algebraic chess notation fo unambiguous moves.
 
-Examples of valid possible moves are `Nf3`, `e4`, `e2-e4`, `Qxd7`, `exd5`
+Examples of valid move inputs are `Nf3`, `e4`, `e2-e4`, `Qxd7`, `exd5`, `f8=Q`
 
 The board is shown using Unicode Chess glyphs. If they render weird, try using a different font or rendering without glyphs using the `g` input.
 
@@ -44,13 +44,13 @@ The board is shown using Unicode Chess glyphs. If they render weird, try using a
 - [x] Printing moves so far
 - [x] Algebraic move Input
     - [x] Long algebraic input
+    - [x] Pawn promotion
     - [ ] Disambiguated algebraic input
-    - [ ] Pawn promotion
 - [x] Capturing
 - [x] Pawns
     - [x] Pawn Capturing
     - [x] Pawn capture notation
-    - [ ] Pawn promotion
+    - [x] Pawn promotion
     - [ ] En passant
 - [x] Castling
     - [x] Not after moving King/Rook
