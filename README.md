@@ -1,6 +1,25 @@
 # pyChess
 Simple command line chess game
 
+     ╔══╤══╤══╤══╤══╤══╤══╤══╗
+    8║♜ │♞ │♝ │♛ │♚ │♝ │♞ │♜ ║
+     ╟──┼──┼──┼──┼──┼──┼──┼──╢
+    7║♟ │♟ │♟ │♟ │♟ │♟ │♟ │♟ ║
+     ╟──┼──┼──┼──┼──┼──┼──┼──╢
+    6║  │  │  │  │  │  │  │  ║
+     ╟──┼──┼──┼──┼──┼──┼──┼──╢
+    5║  │  │  │  │  │  │  │  ║
+     ╟──┼──┼──┼──┼──┼──┼──┼──╢
+    4║  │  │  │  │  │  │  │  ║
+     ╟──┼──┼──┼──┼──┼──┼──┼──╢
+    3║  │  │  │  │  │  │  │  ║
+     ╟──┼──┼──┼──┼──┼──┼──┼──╢
+    2║♙ │♙ │♙ │♙ │♙ │♙ │♙ │♙ ║
+     ╟──┼──┼──┼──┼──┼──┼──┼──╢
+    1║♖ │♘ │♗ │♕ │♔ │♗ │♘ │♖ ║
+     ╚══╧══╧══╧══╧══╧══╧══╧══╝
+     a  b  c  d  e  f  g  h
+
 Run the game by using
 
     python playChess.py
@@ -31,8 +50,8 @@ Examples of valid possible moves are `Nf3`, `e4`, `e2-e4`, `Qxd7`, `exd5`
 - [ ] Check checking
 - [ ] Checkmate checking
 
-
-Unit tests can be done by running
+## Unit Tests
+Tests are found in `test.py`. Unit tests can be done by running
 
     python -m unittest test.py
 
