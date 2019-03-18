@@ -32,7 +32,7 @@ def possiblePawnStarts(end_coords, color, board):
 			if board[start_row][start_col] == 'WP':
 				return [(start_row, start_col)]
 			# Pawns can move 2 from the 2nd rank only if they are not blocked
-			elif end_coords[0] == 3:
+			elif end_coords[0] == 3 and board[start_row][start_col] == EMPTY_SQUARE:
 				start_row, start_col = 1, end_coords[1]
 				if board[start_row][start_col] == 'WP':
 					return [(start_row, start_col)]
@@ -60,7 +60,7 @@ def possiblePawnStarts(end_coords, color, board):
 			if board[start_row][start_col] == 'BP':
 				return [(start_row, start_col)]
 			# Pawns can move 2 from the 7th rank only if they are not blocked
-			elif end_coords[0] == 4:
+			elif end_coords[0] == 4 and board[start_row][start_col] == EMPTY_SQUARE:
 				start_row, start_col = 6, end_coords[1]
 				if board[start_row][start_col] == 'BP':
 					return [(start_row, start_col)]

@@ -60,7 +60,7 @@ class Chess:
 				capture = True
 				if piece == 'P':
 					if pawn_pos == None and start_pos == None:
-						print("'{}' is an invalid move".format(move))
+						raise ValueError("'{}' is an invalid move".format(move))
 						return
 					if start_pos == None:
 						# mark that rank is not given
@@ -69,7 +69,7 @@ class Chess:
 			self.movePiece(piece, end_pos, start_pos, capture)
 			self.turn = 1-self.turn
 		else:
-			print("'{}' is an invalid move".format(move))
+			raise ValueError("'{}' is an invalid move".format(move))
 
 	def convertPosToCoords(self, pos):
 		"""Convert position notation from board notation to (row, col).
@@ -90,6 +90,43 @@ class Chess:
 
 		return (row, col)
 
+	def checkSquare(self, pos):
+		"""Returns string denoting the current occupant of the chess square
+
+		Params:
+		pos -- Chess position in chess notation (not checked for valid inputs)
+
+		Returns: string with current piece in square or EMPTY_SQUARE const if empty
+
+		Ex:
+		In the starting position, checkSquare('e1') -> 'WK' and checkSquare('e4') -> '  '
+		"""
+
+		coords = self.convertPosToCoords(pos)
+		return self.board[coords[0]][coords[1]]
+
+	def placeOnSquare(self, pos, piece):
+		"""Places piece on given square
+
+		Params:
+		pos -- Chess position in chess notation (not checked for valid inputs)
+		piece -- Chess piece given by 2 char string color+type
+			color in ['W','B']
+			type in ['K','Q','R','B','N','P']
+
+		Ex:
+		To place white knight on b2 call placeOnSquare('b2', 'WN')
+		"""
+
+		if len(piece) != 2:
+			raise ValueError("'{}' is not a valid 2 char string piece input".format(piece))
+		if piece[0] not in ['W','B']:
+			raise ValueError('{} is not a valid color'.format(piece[0]))
+		if piece[1] not in ['K','Q','R','B','N','P']:
+			raise ValueError('{} is not a valid piece type'.format(piece[1]))
+
+		coords = self.convertPosToCoords(pos)
+		self.board[coords[0]][coords[1]] = piece
 
 	def movePiece(self, piece, end_pos, start_pos=None, capture=False):
 		end_coords = self.convertPosToCoords(end_pos)
