@@ -68,22 +68,29 @@ def possiblePawnStarts(end_coords, color, board):
 
 	return []
 
-def possibleKinghtStarts(end_coords, color, board):
-	diffs = [(1,2), (1,-2), (2,1), (2,-1), (-1,2), (-1,-2), (-2,1), (-2,-1)]
+def definedDistancePiece(diffs, end_coords, piece, board):
+	"""Logic for defined distance pieces: Kinght, King"""
 	possible_start_coords = []
-
 	for diff in diffs:
 		start_row, start_col = end_coords[0]+diff[0], end_coords[1]+diff[1]
 		if not onBoard(start_row, start_col):
 			continue
 
-		if board[start_row][start_col] == color+'N':
+		if board[start_row][start_col] == piece:
 			possible_start_coords.append((start_row, start_col))
 
 	return possible_start_coords
 
+def possibleKinghtStarts(end_coords, color, board):
+	diffs = [(1,2), (1,-2), (2,1), (2,-1), (-1,2), (-1,-2), (-2,1), (-2,-1)]
+	return definedDistancePiece(diffs, end_coords, color+'N', board)
+
+def possibleKingStarts(end_coords, color, board):
+	diffs = [(1,1), (1,0), (1,-1), (0,1), (0,-1), (-1,1), (-1,0), (-1,-1)]
+	return definedDistancePiece(diffs, end_coords, color+'K', board)
+
 def longDistancePiece(dirs, end_coords, piece, board):
-	""" Logic for long distance pieces: Queen, Rook, Knight"""
+	"""Logic for long distance pieces: Queen, Rook, Bishop"""
 	possible_start_coords = []
 
 	for diff in dirs:
@@ -96,30 +103,16 @@ def longDistancePiece(dirs, end_coords, piece, board):
 	return possible_start_coords
 
 def possibleBishopStarts(end_coords, color, board):
-	diffs = [(1,1), (1,-1), (-1,1), (-1,-1)]
-	return longDistancePiece(diffs, end_coords, color+'B', board)
+	dirs = [(1,1), (1,-1), (-1,1), (-1,-1)]
+	return longDistancePiece(dirs, end_coords, color+'B', board)
 
 def possibleRookStarts(end_coords, color, board):
-	diffs = [(1,0), (0,1), (-1,0), (0,-1)]
-	return longDistancePiece(diffs, end_coords, color+'R', board)
+	dirs = [(1,0), (0,1), (-1,0), (0,-1)]
+	return longDistancePiece(dirs, end_coords, color+'R', board)
 
 def possibleQueenStarts(end_coords, color, board):
-	diffs = [(1,1), (1,-1), (-1,1), (-1,-1), (1,0), (0,1), (-1,0), (0,-1)]
-	return longDistancePiece(diffs, end_coords, color+'Q', board)
-
-def possibleKingStarts(end_coords, color, board):
-	diffs = [(1,1), (1,0), (1,-1), (0,1), (0,-1), (-1,1), (-1,0), (-1,-1)]
-	possible_start_coords = []
-
-	for diff in diffs:
-		start_row, start_col = end_coords[0]+diff[0], end_coords[1]+diff[1]
-		if not onBoard(start_row, start_col):
-			continue
-
-		if board[start_row][start_col] == color+'K':
-			possible_start_coords.append((start_row, start_col))
-
-	return possible_start_coords
+	dirs = [(1,1), (1,-1), (-1,1), (-1,-1), (1,0), (0,1), (-1,0), (0,-1)]
+	return longDistancePiece(dirs, end_coords, color+'Q', board)
 
 def possiblePieceStarts(piece, end_coords, color, board):
 	"""Gets the possible starting positions of pieces that can move to end_coords.
