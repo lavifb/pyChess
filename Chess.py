@@ -16,8 +16,9 @@ class Chess:
 		self.glyhs = glyhs
 		self.board = [[EMPTY_SQUARE]*self.width for i in range(self.height)]
 		self.turn = 0 # White goes first
+		self.moves = [[],[]] # records moves made so far
 
-		# holds whether you can still castle king and queen side for each player
+		# Holds whether you can still castle king and queen side for each player
 		# player can castle king  if self.castle[self.turn][0]
 		# player can castle queen if self.castle[self.turn][1]
 		self.castle = [[True, True], [True, True]]
@@ -52,37 +53,38 @@ class Chess:
 
 		if move in ['O-O', '0-0']:
 			self.moveCastle('king')
-			self.turn = 1-self.turn
-			return
 		elif move in ['O-O-O', '0-0-0']:
 			self.moveCastle('queen')
-			self.turn = 1-self.turn
-			return
-
-		match = self.move_re.match(move)
-		if match:
-			piece, start_pos, pawn_pos, move_type, end_pos = match.group(1, 2, 3, 4, 5)
-
-			# set pawn for empty piece
-			if piece == None:
-				piece = 'P'
-
-			# check for capture
-			capture = False
-			if move_type == 'x':
-				capture = True
-				if piece == 'P':
-					if pawn_pos == None and start_pos == None:
-						raise ValueError("'{}' is an invalid move".format(move))
-						return
-					if start_pos == None:
-						# mark that rank is not given
-						start_pos = 'X'+pawn_pos
-
-			self.movePiece(piece, end_pos, start_pos, capture)
-			self.turn = 1-self.turn
 		else:
-			raise ValueError("'{}' is an invalid move".format(move))
+			match = self.move_re.match(move)
+			if match:
+				piece, start_pos, pawn_pos, move_type, end_pos = match.group(1, 2, 3, 4, 5)
+
+				# set pawn for empty piece
+				if piece == None:
+					piece = 'P'
+
+				# check for capture
+				capture = False
+				if move_type == 'x':
+					capture = True
+					if piece == 'P':
+						if pawn_pos == None and start_pos == None:
+							raise ValueError("'{}' is an invalid move".format(move))
+							return
+						if start_pos == None:
+							# mark that rank is not given
+							start_pos = 'X'+pawn_pos
+
+				self.movePiece(piece, end_pos, start_pos, capture)
+			else:
+				raise ValueError("'{}' is an invalid move".format(move))
+		
+		# record move
+		self.moves[self.turn].append(move)
+		# change turns
+		self.turn = 1-self.turn
+
 
 	def convertPosToCoords(self, pos):
 		"""Convert position notation from board notation to (row, col).
@@ -255,3 +257,16 @@ class Chess:
 		print('   ╚══╧══╧══╧══╧══╧══╧══╧══╝')
 		print('    a  b  c  d  e  f  g  h ')
 		print('')
+
+	def printMoves(self):
+		"""Prints moves made to stdout"""
+		print('\n')
+		print('  WHITE  │  BLACK  ')
+		print('═════════╪═════════')
+		for wm, bm in zip(*self.moves):
+			print("{:9}│{:9}".format(wm, bm))
+		# if black has one less move
+		if len(self.moves[0]) > len(self.moves[1]):
+			print("{:9}│".format(self.moves[0][-1]))
+
+		print('\n')

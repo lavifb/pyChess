@@ -9,6 +9,7 @@ class ChessGame:
 		"""Starts the interactive chess game and runs the game loop"""
 		print("Welcome to Chess!")
 		print("Input 'q' to exit game")
+		print("Input 'm' to see moves made so far")
 		print("Unambiguous moves are accepted in algebraic chess notation\n\tEx: Nf3, e4, Rxa7")
 		print("Moves are also accepted in long algebraic chess notation\n\tEx: Ng1-f3, e2-e4, Ra4xa7")
 		print("\n")
@@ -30,6 +31,9 @@ class ChessGame:
 				moveInput = input(input_query)
 				if moveInput == 'q':
 					return
+				elif moveInput == 'm':
+					self.chess.printMoves()
+					continue
 				self.chess.makeMove(moveInput.strip())
 
 			except ValueError as err:
