@@ -48,11 +48,7 @@ class Chess:
 		# TODO: check for castling
 		match = self.move_re.match(move)
 		if match:
-			piece, start_pos, move_type, end_pos = match.group(1, 2, 4, 5)
-			# If only end position is given
-			# if end_pos == None:
-			# 	end_pos = start_pos
-			# 	start_pos = None
+			piece, start_pos, pawn_pos, move_type, end_pos = match.group(1, 2, 3, 4, 5)
 
 			# set pawn for empty piece
 			if piece == None:
@@ -62,7 +58,13 @@ class Chess:
 			capture = False
 			if move_type == 'x':
 				capture = True
-				# TODO: pawn capture notation (use group 3)
+				if piece == 'P':
+					if pawn_pos == None and start_pos == None:
+						print("'{}' is an invalid move".format(move))
+						return
+					if start_pos == None:
+						# mark that rank is not given
+						start_pos = 'X'+pawn_pos
 
 			self.movePiece(piece, end_pos, start_pos, capture)
 			self.turn = 1-self.turn
@@ -110,10 +112,23 @@ class Chess:
 			raise ValueError("Multiple pieces found that can make move {}{}".format(piece, end_pos))
 
 		start_coords = possible_pieces_to_move[0]
-		if start_pos:
-			start_coords = self.convertPosToCoords(start_pos)
-			if start_coords not in possible_pieces_to_move:
-				raise ValueError("No piece found that can make move from {}{} to {}".format(piece, start_pos, end_pos))
+
+		# Pawn notation is weird. This covers notation like 'exd4'
+		if piece == 'P' and capture and start_pos[0] == 'X':
+			# rank not given
+			start_col = col_conv[start_pos[1]]
+			start_coords = None
+			for poss_start in possible_pieces_to_move:
+				if poss_start[1] == start_col:
+					start_coords = poss_start
+			if start_coords == None:
+				raise ValueError("No pawn found that can make move {}x{}".format(start_pos[0], end_pos))
+
+		else:
+			if start_pos:
+				start_coords = self.convertPosToCoords(start_pos)
+				if start_coords not in possible_pieces_to_move:
+					raise ValueError("No piece found that can make move from {}{} to {}".format(piece, start_pos, end_pos))
 
 
 		# TODO: Castling
