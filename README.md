@@ -34,6 +34,12 @@ The board is shown using Unicode Chess glyphs. If they render weird, try using a
 
 ### Features
 - [x] Basic moving of pieces
+    - [x] King
+    - [x] Queen
+    - [x] Bishop
+    - [x] Rook
+    - [x] Knight
+    - [x] Pawns
 - [x] Printing board state
 - [x] Printing moves so far
 - [x] Algebraic move Input
