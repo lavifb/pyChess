@@ -17,6 +17,11 @@ class Chess:
 		self.board = [[EMPTY_SQUARE]*self.width for i in range(self.height)]
 		self.turn = 0 # White goes first
 
+		# holds whether you can still castle king and queen side for each player
+		# player can castle king  if self.castle[self.turn][0]
+		# player can castle queen if self.castle[self.turn][1]
+		self.castle = [[True, True], [True, True]]
+
 		# TODO: pawn promotion in regex
 		self.move_re = re.compile(r'^([KQBNR])?(?:([abcdefgh][1-8])?(:?[abcdefgh])?\s*([-x]))?\s*([abcdefgh][1-8])$')
 
@@ -45,7 +50,15 @@ class Chess:
 		move -- String in algebraic chess notation
 		"""
 
-		# TODO: check for castling
+		if move in ['O-O', '0-0']:
+			self.moveCastle('king')
+			self.turn = 1-self.turn
+			return
+		elif move in ['O-O-O', '0-0-0']:
+			self.moveCastle('queen')
+			self.turn = 1-self.turn
+			return
+
 		match = self.move_re.match(move)
 		if match:
 			piece, start_pos, pawn_pos, move_type, end_pos = match.group(1, 2, 3, 4, 5)
@@ -168,16 +181,67 @@ class Chess:
 					raise ValueError("No piece found that can make move from {}{} to {}".format(piece, start_pos, end_pos))
 
 
-		# TODO: Castling
-
 		# move piece
 		newBoard = copy.deepcopy(self.board)
 		newBoard[start_coords[0]][start_coords[1]] = EMPTY_SQUARE
 		newBoard[end_coords[0]][end_coords[1]] = color + piece
 
+		# handle castling rules
+		castle_row = 0 if self.turn == 0 else 7
+		if piece == 'K':
+			self.castle[self.turn] = [False, False]
+		elif piece == 'R' and start_coords == (castle_row, 0):
+			self.castle[self.turn][1] = False
+		elif piece == 'R' and start_coords == (castle_row, 7):
+			self.castle[self.turn][0] = False
+
+
+		# TODO: pawn promotion
 		# TODO: check for check/checkmate
 
 		self.board = newBoard
+
+	def moveCastle(self, side='king'):
+		"""Performs Castling for current player if allowed
+
+		Params:
+		side -- Side to castle on ['king','queen']
+
+		"""
+
+		# TODO: castle out of check
+		# TODO: castle through check
+
+		row = 0 if self.turn == 0 else 7
+		color = 'W' if self.turn == 0 else 'B'
+
+		if side=='king':
+			if (self.board[row][4], self.board[row][5], self.board[row][6], self.board[row][7]) \
+				!= (color+'K', EMPTY_SQUARE, EMPTY_SQUARE, color+'R'):
+				raise ValueError("Pieces are not in place to castle king side")
+			if not self.castle[self.turn][0]:
+				raise ValueError("Castling king side no longer allowed")
+
+			# Castle
+			self.board[row][4], self.board[row][5], self.board[row][6], self.board[row][7] \
+				= EMPTY_SQUARE, color+'R', color+'K', EMPTY_SQUARE
+
+			self.castle[self.turn] = [False, False]
+
+		if side=='queen':
+			if (self.board[row][4], self.board[row][3], self.board[row][2], self.board[row][1], self.board[row][0]) \
+				!= (color+'K', EMPTY_SQUARE, EMPTY_SQUARE, EMPTY_SQUARE, color+'R'):
+				raise ValueError("Pieces are not in place to castle queen side")
+			if not self.castle[self.turn][1]:
+				raise ValueError("Castling queen side no longer allowed")
+
+			# Castle
+			self.board[row][4], self.board[row][3], self.board[row][2], self.board[row][1], self.board[row][0] \
+				= EMPTY_SQUARE, color+'R', color+'K', EMPTY_SQUARE, EMPTY_SQUARE
+
+			self.castle[self.turn] = [False, False]
+
+
 
 	def printBoard(self):
 		"""Print board state to stdout"""

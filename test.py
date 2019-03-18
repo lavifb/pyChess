@@ -37,6 +37,16 @@ class SimpleInputsTest(unittest.TestCase):
 		self.assertEqual(self.chess.board[1][4], EMPTY_SQUARE)
 		self.assertEqual(self.chess.board[3][4], 'WP')
 
+	def test_move_e3e4(self):
+		"""
+		Illegal e3-e4 chess move
+		"""
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('e3-e4')
+
+		self.assertEqual(self.chess.board[1][4], 'WP')
+		self.assertEqual(self.chess.board[3][4], EMPTY_SQUARE)
+
 	def test_move_Nf3(self):
 		"""
 		Simple Nf3 chess move
@@ -258,6 +268,35 @@ class KnightMovesTest(unittest.TestCase):
 		self.assertEqual(self.chess.checkSquare('d4'), EMPTY_SQUARE)
 		self.assertEqual(self.chess.checkSquare('d5'), 'WP')
 
+	def test_ambig_move1(self):
+		"""
+		Test ambiguous move
+		"""
+
+		self.chess.setSquare('e1', 'WN')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Nf3')
+		self.chess.makeMove('Ne1-f3')
+
+		self.assertEqual(self.chess.checkSquare('g1'), 'WN')
+		self.assertEqual(self.chess.checkSquare('e1'), EMPTY_SQUARE)
+		self.assertEqual(self.chess.checkSquare('f3'), 'WN')
+
+	def test_ambig_move2(self):
+		"""
+		Test ambiguous move
+		"""
+
+		self.chess.setSquare('e1', 'WN')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Nf3')
+		self.chess.makeMove('Ng1-f3')
+
+		self.assertEqual(self.chess.checkSquare('e1'), 'WN')
+		self.assertEqual(self.chess.checkSquare('g1'), EMPTY_SQUARE)
+		self.assertEqual(self.chess.checkSquare('f3'), 'WN')
+
+
 class QueenMovesTest(unittest.TestCase):
 	"""
 	Tests for Queen moves. Implicitly also tests rooks and bishop logic
@@ -321,6 +360,85 @@ class QueenMovesTest(unittest.TestCase):
 		self.chess.makeMove('Qxd4')
 		self.assertEqual(self.chess.checkSquare('d4'), 'WQ')
 		self.assertEqual(self.chess.checkSquare('e3'), EMPTY_SQUARE)
+
+class BishopRookMovesTest(unittest.TestCase):
+	"""
+	Tests for Bishop and Rook moves
+	"""
+	def setUp(self):
+		self.chess = Chess()
+		self.chess.setSquare('e3', 'WB')
+		self.chess.setSquare('b7', 'BR')
+
+	def test__moves(self):
+		"""
+		Test a bunch of valid and invalid bishop and rook moves
+		"""
+		self.chess.makeMove('Bc5')
+		self.chess.makeMove('Rb6')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Ba7')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Ba5')
+		self.chess.makeMove('Ba3')
+		self.chess.makeMove('Rf6')
+		self.chess.makeMove('Bb2')
+		self.chess.makeMove('Rf8')
+
+class Castling(unittest.TestCase):
+	"""
+	Tests for Castling
+	"""
+	def setUp(self):
+		self.chess = Chess()
+		self.chess.setSquare('e1', 'WK')
+		self.chess.setSquare('h1', 'WR')
+		self.chess.setSquare('e8', 'BK')
+		self.chess.setSquare('a8', 'BR')
+
+	def test_castling(self):
+		"""
+		Test castling
+		"""
+		self.chess.makeMove('O-O')
+		self.chess.makeMove('O-O-O')
+
+		self.assertEqual(self.chess.checkSquare('e1'), EMPTY_SQUARE)
+		self.assertEqual(self.chess.checkSquare('f1'), 'WR')
+		self.assertEqual(self.chess.checkSquare('g1'), 'WK')
+		self.assertEqual(self.chess.checkSquare('h1'), EMPTY_SQUARE)
+
+		self.assertEqual(self.chess.checkSquare('e8'), EMPTY_SQUARE)
+		self.assertEqual(self.chess.checkSquare('d8'), 'BR')
+		self.assertEqual(self.chess.checkSquare('c8'), 'BK')
+		self.assertEqual(self.chess.checkSquare('b8'), EMPTY_SQUARE)
+		self.assertEqual(self.chess.checkSquare('a8'), EMPTY_SQUARE)
+
+	def test_blocked_castle(self):
+		"""
+		Test blocked castling
+		"""
+		self.chess.setSquare('f1', 'WB')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('0-0')
+		self.chess.makeMove('Be2')
+		self.chess.makeMove('0-0-0')
+		self.chess.makeMove('0-0')
+
+	def test_moved_before_castle(self):
+		"""
+		Test illegal castling after moving pieces
+		"""
+		self.chess.setSquare('a1', 'WR')
+		self.chess.makeMove('Rh2')
+		self.chess.makeMove('Ke7')
+		self.chess.makeMove('Rh1')
+		self.chess.makeMove('Ke8')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('0-0')
+		self.chess.makeMove('0-0-0')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('0-0-0')
 
 
 

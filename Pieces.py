@@ -9,6 +9,7 @@ def onBoard(row, col):
 	return True
 
 def possiblePawnStarts(end_coords, color, board):
+	# TODO: en passant
 	if color == 'W':
 		# Cant move pawns to 1st or 2nd rank
 		if end_coords[0] == 0 or end_coords[0] == 1:
