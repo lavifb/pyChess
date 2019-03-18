@@ -105,7 +105,7 @@ class Chess:
 		coords = self.convertPosToCoords(pos)
 		return self.board[coords[0]][coords[1]]
 
-	def placeOnSquare(self, pos, piece):
+	def setSquare(self, pos, piece):
 		"""Places piece on given square
 
 		Params:
@@ -115,7 +115,7 @@ class Chess:
 			type in ['K','Q','R','B','N','P']
 
 		Ex:
-		To place white knight on b2 call placeOnSquare('b2', 'WN')
+		To place white knight on b2 call setSquare('b2', 'WN')
 		"""
 
 		if len(piece) != 2:

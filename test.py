@@ -81,11 +81,11 @@ class SimpleInputsTest(unittest.TestCase):
 class PawnMovesTest(unittest.TestCase):
 	def setUp(self):
 		self.chess = Chess()
-		self.chess.placeOnSquare('b2', 'WP')
-		self.chess.placeOnSquare('c2', 'WP')
-		self.chess.placeOnSquare('c3', 'BP')
-		self.chess.placeOnSquare('d2', 'WP')
-		self.chess.placeOnSquare('d3', 'WP')
+		self.chess.setSquare('b2', 'WP')
+		self.chess.setSquare('c2', 'WP')
+		self.chess.setSquare('c3', 'BP')
+		self.chess.setSquare('d2', 'WP')
+		self.chess.setSquare('d3', 'WP')
 
 	def test_illegal_hop1(self):
 		"""
@@ -173,13 +173,42 @@ class PawnMovesTest(unittest.TestCase):
 		self.assertEqual(self.chess.checkSquare('d2'), 'WP')
 		self.assertEqual(self.chess.checkSquare('d3'), 'WP')
 
+	# def test_en_passant(self):
+	# 	"""
+	# 	En passant
+	# 	"""
+	# 	self.chess.setSquare('a4', 'BP')
+	# 	self.chess.makeMove('b4')
+	# 	self.chess.makeMove('axb3')
+
+	# 	self.assertEqual(self.chess.checkSquare('a4'), EMPTY_SQUARE)
+	# 	self.assertEqual(self.chess.checkSquare('b4'), EMPTY_SQUARE)
+	# 	self.assertEqual(self.chess.checkSquare('b3'), 'BP')
+
+	# def test_no_en_passant(self):
+	# 	"""
+	# 	No en passant
+	# 	"""
+	# 	self.chess.setSquare('a4', 'BP')
+	# 	self.chess.setSquare('g8', 'BK')
+
+	# 	self.chess.makeMove('b4')
+	# 	self.chess.makeMove('Kf7')
+	# 	self.chess.makeMove('d4')
+	# 	with self.assertRaises(ValueError):
+	# 		self.chess.makeMove('axb3')
+
+	# 	self.assertEqual(self.chess.checkSquare('a4'), 'BP')
+	# 	self.assertEqual(self.chess.checkSquare('b4'), 'WP')
+	# 	self.assertEqual(self.chess.checkSquare('b3'), EMPTY_SQUARE)
+
 
 class KnightMovesTest(unittest.TestCase):
 	def setUp(self):
 		self.chess = Chess()
-		self.chess.placeOnSquare('g1', 'WN')
-		self.chess.placeOnSquare('h3', 'BB')
-		self.chess.placeOnSquare('d4', 'WP')
+		self.chess.setSquare('g1', 'WN')
+		self.chess.setSquare('h3', 'BB')
+		self.chess.setSquare('d4', 'WP')
 
 	def test_move1(self):
 		"""
@@ -228,6 +257,72 @@ class KnightMovesTest(unittest.TestCase):
 		self.chess.makeMove('d5')
 		self.assertEqual(self.chess.checkSquare('d4'), EMPTY_SQUARE)
 		self.assertEqual(self.chess.checkSquare('d5'), 'WP')
+
+class QueenMovesTest(unittest.TestCase):
+	"""
+	Tests for Queen moves. Implicitly also tests rooks and bishop logic
+	"""
+	def setUp(self):
+		self.chess = Chess()
+		self.chess.setSquare('e3', 'WQ')
+
+	def test_queen_moves(self):
+		"""
+		Test a bunch of valid and invalid queen moves
+		"""
+		self.chess.makeMove('Qe7')
+		self.chess.turn = 0
+
+		self.assertEqual(self.chess.checkSquare('e7'), 'WQ')
+		self.assertEqual(self.chess.checkSquare('e3'), EMPTY_SQUARE)
+
+		self.chess.makeMove('Qg5')
+		self.chess.turn = 0
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Qg5')
+		self.chess.makeMove('Qb5')
+		self.chess.turn = 0
+		self.chess.makeMove('Qf1')
+		self.chess.turn = 0
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Qg5')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Qg3')
+		self.chess.makeMove('Qg2')
+
+	def test_blocked_queen_moves(self):
+		"""
+		Test queen moves while blocked by pieces
+		"""
+		self.chess.setSquare('e4', 'WP')
+		self.chess.setSquare('d4', 'BP')
+
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Qe7')
+
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Qxe7')
+
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Qe4')
+
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Qxe4')
+
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Qc5')
+
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Qxc5')
+
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Qd4')
+
+		self.chess.makeMove('Qxd4')
+		self.assertEqual(self.chess.checkSquare('d4'), 'WQ')
+		self.assertEqual(self.chess.checkSquare('e3'), EMPTY_SQUARE)
+
+
 
 if __name__ == '__main__':
 	unittest.main()
