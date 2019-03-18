@@ -23,7 +23,6 @@ class Chess:
 		# player can castle queen if self.castle[self.turn][1]
 		self.castle = [[True, True], [True, True]]
 
-		# TODO: pawn promotion in regex
 		self.move_re = re.compile(r'^([KQBNR])?(?:([abcdefgh][1-8])?(:?[abcdefgh])?\s*([-x]))?\s*([abcdefgh][1-8])(?:=([QBNR]))?$')
 
 	def setupBoard(self):
@@ -209,7 +208,6 @@ class Chess:
 			self.castle[self.turn][0] = False
 
 
-		# TODO: pawn promotion
 		# TODO: check for check/checkmate
 
 		self.board = newBoard
