@@ -154,35 +154,3 @@ class Chess:
 		print('   ╚══╧══╧══╧══╧══╧══╧══╧══╝')
 		print('    a  b  c  d  e  f  g  h ')
 		print('')
-
-
-chess = Chess()
-chess.setupBoard()
-
-def gameLoop(chess):
-	print("Welcome to Chess!")
-	print("Input 'q' to exit game")
-	print("Unambiguous moves are accepted in algebraic chess notation\n\tEx: Nf3, e4, Rxa7")
-	print("Moves are also accepted in long algebraic chess notation\n\tEx: Ng1-f3, e2-e4, Ra4xa7")
-	print("\n")
-
-	while True:
-		chess.printBoard()
-		try:
-			input_query = ''
-			if chess.turn == 0:
-				input_query = 'White to move > '
-			else:
-				input_query = 'Black to move > '
-
-			moveInput = input(input_query)
-			if moveInput == 'q':
-				return
-			chess.makeMove(moveInput.strip())
-
-		except ValueError as err:
-			print(err)
-			# print('Error making a move. Please try again.')
-
-
-gameLoop(chess)
