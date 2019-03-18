@@ -48,9 +48,11 @@ The board is shown using Unicode Chess glyphs. If they render weird, try using a
     - [ ] En passant
 - [x] Castling
     - [x] Not after moving King/Rook
-    - [ ] Not through check
-- [ ] Check checking
-- [ ] Checkmate checking
+- [ ] Checks
+	- [ ] No moving into check
+	- [ ] No staying in check
+	- [ ] No castling through check
+- [ ] Checkmates
 
 ## Unit Tests
 Tests are found in `test.py`. Unit tests can be done by running
