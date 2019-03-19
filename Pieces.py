@@ -1,6 +1,7 @@
 from consts import EMPTY_SQUARE
 
 def onBoard(row, col):
+	"""Checks if row, col are valid coords on the chess board"""
 	if row > 7 or row < 0:
 		return False
 	if col > 7 or col < 0:

@@ -143,6 +143,19 @@ class Chess:
 		self.board[coords[0]][coords[1]] = piece
 
 	def movePiece(self, piece, end_pos, start_pos=None, capture=False, promotion=None):
+		"""Checks that the move is legal and, if so, makes the move.
+		Otherwise, a ValueError is raised with text describing why the move is illegal.
+
+		Params:
+		piece -- piece to move from ['K','Q','R','B','N','P']
+		end_pos -- final piece position in chess notation (not checked for valid inputs)
+		start_pos -- starting piece position in chess notation (default: None).
+			Set to None if starting position must be inferred from end_pos. 
+			This is possible as long as the move is unambiguous.
+		capture -- boolean if the move is capturing a piece (default: False)
+		promotion -- Provides choice for pawn promotion from [Q','R','B','N',None] (default: None)
+			None is used if there is no promotion. If a pawn is being moved to last rank, a promotion must be provided
+		"""
 		end_coords = self.convertPosToCoords(end_pos)
 		color = 'W' if self.turn == 0 else 'B'
 
@@ -190,8 +203,6 @@ class Chess:
 		else:
 			if promotion:
 				raise ValueError("Cannot promote with this move")
-
-
 
 		# move piece
 		newBoard = copy.deepcopy(self.board)
@@ -254,6 +265,13 @@ class Chess:
 			self.castle[self.turn] = [False, False]
 
 	def findKing(self, board):
+		"""Finds king of color self.turn on board if it exists. Only returns the position of the first king it finds.
+
+		Params:
+		board -- board to search for king on
+
+		Returns: coords of first king found or None if there is no king
+		"""
 		color = 'W' if self.turn == 0 else 'B'
 		king_coords = None
 		for row in range(len(board)):
@@ -265,6 +283,13 @@ class Chess:
 		return None
 
 	def checkForCheck(self, board):
+		"""Checks board if the player is in check. Only works if there is no more than 1 self.turn colored king.
+
+		Params:
+		board -- board to search for check
+
+		Returns: True if in check and False otherwise.
+		"""
 		opposing_color = 'W' if self.turn == 1 else 'B'
 		king_coords = self.findKing(board)
 		if king_coords == None:
