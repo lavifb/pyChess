@@ -521,6 +521,29 @@ class CheckTests(unittest.TestCase):
 		self.assertEqual(self.chess.checkSquare('d6'), EMPTY_SQUARE)
 		self.assertEqual(self.chess.checkSquare('d2'), 'WR')
 
+	def test_pawn_check1(self):
+		"""
+		No allowing pawn checks
+		"""
+		self.chess.setSquare('f3', 'WN')
+		self.chess.setSquare('f2', 'BP')
+		self.chess.setSquare('e2', 'BP')
 
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('a3')
+		self.chess.makeMove('Kxf2')
+		
+		self.assertEqual(self.chess.checkSquare('e1'), EMPTY_SQUARE)
+		self.assertEqual(self.chess.checkSquare('f2'), 'WK')
+
+	def test_pawn_check2(self):
+		"""
+		King not in check in front of pawn
+		"""
+		self.chess.setSquare('f3', 'WN')
+		self.chess.setSquare('e2', 'BP')
+
+		self.chess.makeMove('a3')
+		
 if __name__ == '__main__':
 	unittest.main()

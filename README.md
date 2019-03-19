@@ -33,6 +33,8 @@ Examples of valid move inputs are `Nf3`, `e4`, `e2-e4`, `Qxd7`, `exd5`, `f8=Q`
 The board is shown using Unicode Chess glyphs. If they render weird, try using a different font or rendering without glyphs using the `g` input.
 
 ### Features
+Most basic chess features are supported. Some edge case rules are not yet implemented fully.
+
 - [x] Basic moving of pieces
     - [x] King
     - [x] Queen
@@ -58,7 +60,7 @@ The board is shown using Unicode Chess glyphs. If they render weird, try using a
 	- [x] No moving into check
 	- [x] No staying in check
 	- [ ] No castling through check
-- [ ] Checkmates
+- [ ] Game End on Checkmate
 
 ## Unit Tests
 Tests are found in `test.py`. Unit tests can be done by running
