@@ -385,7 +385,7 @@ class BishopRookMovesTest(unittest.TestCase):
 		self.chess.makeMove('Bb2')
 		self.chess.makeMove('Rf8')
 
-class Castling(unittest.TestCase):
+class CastlingTest(unittest.TestCase):
 	"""
 	Tests for Castling
 	"""
@@ -440,7 +440,7 @@ class Castling(unittest.TestCase):
 		with self.assertRaises(ValueError):
 			self.chess.makeMove('0-0-0')
 
-class PawnPromotion(unittest.TestCase):
+class PawnPromotionTest(unittest.TestCase):
 	def setUp(self):
 		self.chess = Chess()
 		self.chess.setSquare('e7', 'WP')
@@ -544,6 +544,18 @@ class CheckTests(unittest.TestCase):
 		self.chess.setSquare('e2', 'BP')
 
 		self.chess.makeMove('a3')
+
+	def test_block_check(self):
+		"""
+		Check should be able to be blocked
+		"""
+
+		self.chess.setSquare('f3', 'WN')
+		self.chess.setSquare('b4', 'BQ')
+		self.chess.setSquare('g5', 'WB')
+
+		self.chess.makeMove('Bd2')
+
 		
 if __name__ == '__main__':
 	unittest.main()
