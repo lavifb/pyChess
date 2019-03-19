@@ -481,6 +481,46 @@ class PawnPromotion(unittest.TestCase):
 		with self.assertRaises(ValueError):
 			self.chess.makeMove('a4=Q')
 
+class CheckTests(unittest.TestCase):
+	def setUp(self):
+		self.chess = Chess()
+		self.chess.setSquare('e1', 'WK')
+		self.chess.setSquare('f3', 'BN')
+		self.chess.setSquare('c4', 'BB')
+		self.chess.setSquare('d8', 'BR')
+		self.chess.setSquare('a2', 'WP')
+
+	def test_moving_in_check(self):
+		"""
+		No moving into check
+		"""
+
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('a3')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Ke2')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Kd1')
+		self.chess.makeMove('Kf2')
+
+		self.assertEqual(self.chess.checkSquare('e1'), EMPTY_SQUARE)
+		self.assertEqual(self.chess.checkSquare('f2'), 'WK')
+
+	def test_pinned_check(self):
+		"""
+		No moving pinned piece into check
+		"""
+		self.chess.setSquare('f3', 'WN')
+		self.chess.setSquare('b4', 'BQ')
+		self.chess.setSquare('d2', 'WR')
+
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Rd6')
+		self.chess.makeMove('a3')
+
+		self.assertEqual(self.chess.checkSquare('d6'), EMPTY_SQUARE)
+		self.assertEqual(self.chess.checkSquare('d2'), 'WR')
+
 
 if __name__ == '__main__':
 	unittest.main()

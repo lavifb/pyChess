@@ -198,6 +198,10 @@ class Chess:
 		newBoard[start_coords[0]][start_coords[1]] = EMPTY_SQUARE
 		newBoard[end_coords[0]][end_coords[1]] = color + piece
 
+		if self.checkForCheck(newBoard):
+			raise ValueError("Cannot make move to a position in check")
+		# TODO: check for checkmate
+
 		# handle castling rules
 		castle_row = 0 if self.turn == 0 else 7
 		if piece == 'K':
@@ -206,9 +210,6 @@ class Chess:
 			self.castle[self.turn][1] = False
 		elif piece == 'R' and start_coords == (castle_row, 7):
 			self.castle[self.turn][0] = False
-
-
-		# TODO: check for check/checkmate
 
 		self.board = newBoard
 
@@ -252,7 +253,28 @@ class Chess:
 
 			self.castle[self.turn] = [False, False]
 
+	def findKing(self, board):
+		color = 'W' if self.turn == 0 else 'B'
+		king_coords = None
+		for row in range(len(board)):
+			for col in range(len(board[row])):
+				if board[row][col] == color+'K':
+					king_coords = (row,col)
+					return king_coords
 
+		return None
+
+	def checkForCheck(self, board):
+		opposing_color = 'W' if self.turn == 1 else 'B'
+		king_coords = self.findKing(board)
+		if king_coords == None:
+			return False
+		for piece in ['Q','R','B','N','P']:
+			possible_pieces_to_move = possiblePieceStarts(piece, king_coords, opposing_color, board)
+			if possible_pieces_to_move:
+				return True
+
+		return False
 
 	def printBoard(self):
 		"""Print board state to stdout"""

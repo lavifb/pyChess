@@ -54,9 +54,9 @@ The board is shown using Unicode Chess glyphs. If they render weird, try using a
     - [ ] En passant
 - [x] Castling
     - [x] Not after moving King/Rook
-- [ ] Checks
-	- [ ] No moving into check
-	- [ ] No staying in check
+- [x] Checks
+	- [x] No moving into check
+	- [x] No staying in check
 	- [ ] No castling through check
 - [ ] Checkmates
 
