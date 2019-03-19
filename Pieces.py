@@ -70,7 +70,16 @@ def possiblePawnStarts(end_coords, color, board):
 	return []
 
 def definedDistancePiece(diffs, end_coords, piece, board):
-	"""Logic for defined distance pieces: Kinght, King"""
+	"""Logic for defined distance pieces: Kinght, King
+	
+	Params:
+	diffs -- list of 2-tuples giving possible moves in coord difference form
+	end_coords -- final coords of move
+	piece -- 2 char string giving color and piece type
+	board -- board on which to make move
+
+	Retruns: list of possible starting positions for this move
+	"""
 	possible_start_coords = []
 	for diff in diffs:
 		start_row, start_col = end_coords[0]+diff[0], end_coords[1]+diff[1]
@@ -91,7 +100,17 @@ def possibleKingStarts(end_coords, color, board):
 	return definedDistancePiece(diffs, end_coords, color+'K', board)
 
 def longDistancePiece(dirs, end_coords, piece, board):
-	"""Logic for long distance pieces: Queen, Rook, Bishop"""
+	"""Logic for long distance pieces: Queen, Rook, Bishop.
+	This works by moving in a dir one square at atime until you hit a piece or the end of the board.
+	
+	Params:
+	dirs -- list of 2-tuples giving possible move directions in coord difference form
+	end_coords -- final coords of move
+	piece -- 2 char string giving color and piece type
+	board -- board on which to make move
+
+	Retruns: list of possible starting positions for this move
+	"""
 	possible_start_coords = []
 
 	for diff in dirs:
