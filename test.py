@@ -403,6 +403,8 @@ class CastlingTest(unittest.TestCase):
 		self.chess.makeMove('O-O')
 		self.chess.makeMove('O-O-O')
 
+		self.chess.printBoard()
+
 		self.assertEqual(self.chess.checkSquare('e1'), EMPTY_SQUARE)
 		self.assertEqual(self.chess.checkSquare('f1'), 'WR')
 		self.assertEqual(self.chess.checkSquare('g1'), 'WK')
@@ -450,14 +452,30 @@ class CastlingTest(unittest.TestCase):
 		with self.assertRaises(ValueError):
 			self.chess.makeMove('Rf1')
 
-	def test_castle_throught_check(self):
+	def test_castle_through_check(self):
 		"""
 		Test illegal castling through check
 		"""
 		self.chess.setSquare('f4', 'BQ')
+		self.chess.setSquare('c4', 'WQ')
 		with self.assertRaises(ValueError):
 			self.chess.makeMove('0-0')
 		self.chess.makeMove('Rf1')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('0-0')
+
+	def test_castle_into_check(self):
+		"""
+		Test illegal castling into check
+		"""
+		self.chess.setSquare('g4', 'BQ')
+		self.chess.setSquare('b4', 'WQ')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('0-0')
+		self.chess.makeMove('Rf1')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('0-0')
+		self.chess.makeMove('Rc8')
 
 class PawnPromotionTest(unittest.TestCase):
 	def setUp(self):

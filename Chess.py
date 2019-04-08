@@ -232,9 +232,6 @@ class Chess:
 
 		"""
 
-		# TODO: castle out of check
-		# TODO: castle through check
-
 		if self.checkForCheck(self.board):
 			raise ValueError("Cannot castle out of check")
 
@@ -249,8 +246,13 @@ class Chess:
 				raise ValueError("Castling king side no longer allowed")
 
 			# Castle
-			self.board[row][4], self.board[row][5], self.board[row][6], self.board[row][7] \
-				= EMPTY_SQUARE, color+'R', color+'K', EMPTY_SQUARE
+			newBoard = copy.deepcopy(self.board)
+			for col in range(5,7):
+				newBoard[row][col-1], newBoard[row][col] = EMPTY_SQUARE, color+'K'
+				if self.checkForCheck(newBoard):
+					raise ValueError("Cannot castle through or into check")
+
+			newBoard[row][5], newBoard[row][7] = color+'R', EMPTY_SQUARE
 
 			self.castle[self.turn] = [False, False]
 
@@ -262,10 +264,17 @@ class Chess:
 				raise ValueError("Castling queen side no longer allowed")
 
 			# Castle
-			self.board[row][4], self.board[row][3], self.board[row][2], self.board[row][1], self.board[row][0] \
-				= EMPTY_SQUARE, color+'R', color+'K', EMPTY_SQUARE, EMPTY_SQUARE
+			newBoard = copy.deepcopy(self.board)
+			for col in range(3,1,-1):
+				newBoard[row][col+1], newBoard[row][col] = EMPTY_SQUARE, color+'K'
+				if self.checkForCheck(newBoard):
+					raise ValueError("Cannot castle through or into check")
+
+			newBoard[row][3], newBoard[row][0] = color+'R', EMPTY_SQUARE
 
 			self.castle[self.turn] = [False, False]
+
+		self.board = newBoard
 
 	def findKing(self, board):
 		"""Finds king of color self.turn on board if it exists. Only returns the position of the first king it finds.

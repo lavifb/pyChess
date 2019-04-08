@@ -59,7 +59,7 @@ Most basic chess features are supported. Some edge case rules are not yet implem
 - [x] Checks
 	- [x] No moving into check
 	- [x] No staying in check
-	- [ ] No castling through check
+	- [x] No castling through check
 - [ ] Game End on Checkmate
 
 ## Unit Tests
