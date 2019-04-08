@@ -235,6 +235,9 @@ class Chess:
 		# TODO: castle out of check
 		# TODO: castle through check
 
+		if self.checkForCheck(self.board):
+			raise ValueError("Cannot castle out of check")
+
 		row = 0 if self.turn == 0 else 7
 		color = 'W' if self.turn == 0 else 'B'
 

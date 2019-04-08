@@ -440,6 +440,16 @@ class CastlingTest(unittest.TestCase):
 		with self.assertRaises(ValueError):
 			self.chess.makeMove('0-0-0')
 
+	def test_castle_out_of_check(self):
+		"""
+		Test illegal castling out of check
+		"""
+		self.chess.setSquare('e4', 'BQ')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('0-0')
+		with self.assertRaises(ValueError):
+			self.chess.makeMove('Rf1')
+
 class PawnPromotionTest(unittest.TestCase):
 	def setUp(self):
 		self.chess = Chess()
